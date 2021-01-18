@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "larynx",
+  "version": "${version}",
+  "name": "Larynx",
+  "description": "A dialogue library that uses plasmid to show pre-made dialogs from json or code. ",
+  "authors": [
+    "calum6541"
+  ],
+  "contact": {
+    "website": "https://maven.nucleoid.xyz/",
+    "repo": "https://github.com/NucleoidMC/larynx"
+  },
+  "license": "MIT",
+  "entrypoints": {
+    "server": [
+      "cal.codes.larynx.Larynx"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.11.1",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}
