@@ -15,13 +15,13 @@ public class DialogueTrack {
           dialogueTrackInstance ->
               dialogueTrackInstance
                   .group(
-                      DialogueRaw.CODEC.listOf().fieldOf("lines").forGetter(e -> e.dialogues),
+                      DialogueLine.CODEC.listOf().fieldOf("lines").forGetter( e -> e.dialogues),
                       Codec.INT.fieldOf("ticksBetween").forGetter(e -> e.ticksBetween))
                   .apply(dialogueTrackInstance, DialogueTrack::new));
-  public List<DialogueRaw> dialogues;
+  public List<DialogueLine> dialogues;
   public int ticksBetween;
 
-  public DialogueTrack(List<DialogueRaw> dialogues, int ticksBetween) {
+  public DialogueTrack(List<DialogueLine> dialogues, int ticksBetween) {
     this.dialogues = dialogues;
     this.ticksBetween = ticksBetween;
   }
@@ -34,7 +34,7 @@ public class DialogueTrack {
   public void play(PlayerSet players) {
     int currentDelay = 0;
     Timer timer = new Timer();
-    for (DialogueRaw entry : this.dialogues) {
+    for (DialogueLine entry : this.dialogues) {
       timer.schedule(
           new TimerTask() {
             @Override
@@ -59,7 +59,7 @@ public class DialogueTrack {
   public void play(ServerPlayerEntity player) {
     int currentDelay = 0;
     Timer timer = new Timer();
-    for (DialogueRaw entry : this.dialogues) {
+    for (DialogueLine entry : this.dialogues) {
       timer.schedule(
           new TimerTask() {
             @Override

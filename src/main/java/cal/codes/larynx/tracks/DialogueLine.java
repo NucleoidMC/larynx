@@ -10,8 +10,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-public class DialogueRaw {
-  public static final Codec<DialogueRaw> CODEC =
+public class DialogueLine {
+  public static final Codec<DialogueLine> CODEC =
       RecordCodecBuilder.create(
           objectInstance ->
               objectInstance
@@ -41,7 +41,7 @@ public class DialogueRaw {
                             break;
                         }
 
-                        return new DialogueRaw(
+                        return new DialogueLine(
                             type, text, author, color, event, tranText, tranAuth, delay);
                       }));
   public String type;
@@ -54,7 +54,7 @@ public class DialogueRaw {
   @Nullable public String soundID;
   public int delay;
 
-  public DialogueRaw(
+  public DialogueLine(
       String type,
       String text,
       String author,
