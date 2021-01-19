@@ -10,8 +10,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public class DialogueRaw {
   public static final Codec<DialogueRaw> CODEC =
       RecordCodecBuilder.create(
@@ -22,30 +20,29 @@ public class DialogueRaw {
                       Codec.STRING.fieldOf("text").forGetter(o -> o.text),
                       Codec.STRING.fieldOf("author").forGetter(o -> o.author),
                       Codec.STRING.fieldOf("color").forGetter(o -> o.color),
-                      Codec.STRING.optionalFieldOf("sound").forGetter(o -> Optional.of(o.soundID)),
-                      Codec.INT.optionalFieldOf("delay").forGetter(o -> Optional.of(o.delay)),
+                      Codec.STRING.optionalFieldOf("sound", "none").forGetter(o -> o.soundID),
+                      Codec.INT.optionalFieldOf("delay", -1).forGetter(o -> o.delay),
                       Codec.BOOL
-                          .optionalFieldOf("translateText")
-                          .forGetter(o -> Optional.of(o.translateText)),
+                          .optionalFieldOf("translateText", false)
+                          .forGetter(o -> o.translateText),
                       Codec.BOOL
-                          .optionalFieldOf("translateAuthor")
-                          .forGetter(o -> Optional.of(o.translateAuthor)))
+                          .optionalFieldOf("translateAuthor", false)
+                          .forGetter(o -> o.translateAuthor))
                   .apply(
                       objectInstance,
                       (type, text, author, color, sound, delay, tranText, tranAuth) -> {
-                        SoundEvent soundd = null;
-                        boolean tranTextt = false;
-                        boolean tranAuthh = false;
-                        int delayy = -1;
-
-                        if (delay.isPresent()) delayy = delay.get();
-                        if (tranAuth.isPresent()) tranAuthh = tranAuth.get();
-                        if (tranText.isPresent()) tranTextt = tranText.get();
-                        if (sound.isPresent())
-                          soundd = Registry.SOUND_EVENT.get(Identifier.tryParse(sound.get()));
+                        SoundEvent event;
+                        switch (sound) {
+                          case "none":
+                            event = null;
+                            break;
+                          default:
+                            event = Registry.SOUND_EVENT.get(Identifier.tryParse(sound));
+                            break;
+                        }
 
                         return new DialogueRaw(
-                            type, text, author, color, soundd, tranTextt, tranAuthh, delayy);
+                            type, text, author, color, event, tranText, tranAuth, delay);
                       }));
   public String type;
   public String text;
@@ -63,9 +60,9 @@ public class DialogueRaw {
       String author,
       String color,
       @Nullable SoundEvent sound,
-      @Nullable boolean translateText,
-      @Nullable boolean translateAuthor,
-      @Nullable int delay) {
+      boolean translateText,
+      boolean translateAuthor,
+      int delay) {
     this.type = type;
     this.text = text;
     this.author = author;

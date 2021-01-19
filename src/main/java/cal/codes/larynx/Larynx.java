@@ -11,13 +11,11 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.util.Identifier;
-import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Optional;
-import java.util.Random;
 
 public class Larynx implements DedicatedServerModInitializer {
   public final boolean DEV = FabricLoader.getInstance().isDevelopmentEnvironment();

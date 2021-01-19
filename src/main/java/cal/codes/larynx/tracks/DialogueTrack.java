@@ -43,7 +43,11 @@ public class DialogueTrack {
             }
           },
           (long) (currentDelay) / 20 * 1000);
-      currentDelay += entry.delay | this.ticksBetween;
+      if (entry.delay == -1) {
+        currentDelay += this.ticksBetween;
+      } else {
+        currentDelay += entry.delay;
+      }
     }
   }
 

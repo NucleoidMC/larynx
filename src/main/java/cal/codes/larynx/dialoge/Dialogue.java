@@ -95,7 +95,8 @@ public abstract class Dialogue {
     } else {
       author = this.author;
     }
-    MutableText authorText = new LiteralText("<")
+    MutableText authorText =
+        new LiteralText("<")
             .formatted(Formatting.WHITE)
             .append(new LiteralText(author).formatted(Formatting.valueOf(color.toUpperCase())))
             .append(new LiteralText("> ").formatted(Formatting.WHITE));
@@ -116,7 +117,8 @@ public abstract class Dialogue {
     } else {
       author = this.author;
     }
-    MutableText authorText = new LiteralText("<")
+    MutableText authorText =
+        new LiteralText("<")
             .formatted(Formatting.WHITE)
             .append(new LiteralText(author).formatted(Formatting.valueOf(color.toUpperCase())))
             .append(new LiteralText("> ").formatted(Formatting.WHITE));

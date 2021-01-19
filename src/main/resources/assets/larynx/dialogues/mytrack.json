@@ -4,7 +4,7 @@
       "type": "usual",
       "text": "Hello! Fine day today isn't it?",
       "author": "NPC 1",
-      "delay": "30",
+      "delay": 30,
       "color": "blue"
     },
     {
