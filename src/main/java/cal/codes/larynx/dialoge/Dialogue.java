@@ -21,8 +21,8 @@ public abstract class Dialogue {
       String text,
       String author,
       String color,
-      @Nullable boolean translateText,
-      @Nullable boolean translateAuthor) {
+      boolean translateText,
+      boolean translateAuthor) {
     this.text = text;
     this.author = author;
     this.color = color;
@@ -30,53 +30,6 @@ public abstract class Dialogue {
     if (translateText) this.translateText = translateText;
     if (translateAuthor) this.translateText = translateText;
   }
-
-  /**
-   * If the text should be parsed into a TranslatableText or LiteralText
-   *
-   * @return boolean
-   */
-  public boolean isTranslateText() {
-    return translateText;
-  }
-
-  /**
-   * Mark the text as translatable or non-translatable
-   *
-   * @param translate
-   */
-  public void setTranslateText(boolean translate) {
-    translateText = translate;
-  }
-
-  /**
-   * If the author should be parsed into a TranslatableText or LiteralText
-   *
-   * @return boolean
-   */
-  public boolean isTranslateAuthor() {
-    return translateAuthor;
-  }
-
-  /** Get the text. */
-  public String getText() {
-    return text;
-  }
-
-  /**
-   * Set the text.
-   *
-   * @param text The text as a string.
-   */
-  public void setText(String text) {
-    this.text = text;
-  }
-
-  /** Get the author. */
-  public String getAuthor() {
-    return author;
-  }
-
   @Override
   public int hashCode() {
     return Objects.hash(text, author, color);
