@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.Nullable;
 
-public class UsualDialogue extends Dialogue<UsualDialogue> {
+public class UsualDialogue extends Dialogue {
   public Codec<UsualDialogue> CODEC =
       RecordCodecBuilder.create(
           instance ->
@@ -24,15 +24,5 @@ public class UsualDialogue extends Dialogue<UsualDialogue> {
       @Nullable boolean translateText,
       @Nullable boolean translateAuthor) {
     super(text, author, color, translateText, translateAuthor);
-  }
-
-  @Override
-  public Codec<UsualDialogue> getCODEC() {
-    return CODEC;
-  }
-
-  @Override
-  public void setCODEC(Codec<UsualDialogue> CODEC) {
-    this.CODEC = CODEC;
   }
 }
