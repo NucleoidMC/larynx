@@ -15,7 +15,7 @@ public class DialogueTrack {
           dialogueTrackInstance ->
               dialogueTrackInstance
                   .group(
-                      DialogueRaw.CODEC.listOf().fieldOf("dialogues").forGetter(e -> e.dialogues),
+                      DialogueRaw.CODEC.listOf().fieldOf("lines").forGetter(e -> e.dialogues),
                       Codec.INT.fieldOf("ticksBetween").forGetter(e -> e.ticksBetween))
                   .apply(dialogueTrackInstance, DialogueTrack::new));
   public List<DialogueRaw> dialogues;
