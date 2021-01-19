@@ -58,23 +58,24 @@ jar {
     from "LICENSE"
 }
 
-// configure the maven publication
+def env = System.getenv()
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
-            artifact(remapJar) {
-                builtBy remapJar
-            }
-            artifact(sourcesJar) {
-                builtBy remapSourcesJar
+        }
+
+        repositories {
+            if (env.MAVEN_URL) {
+                maven {
+                    credentials {
+                        username env.MAVEN_USERNAME
+                        password env.MAVEN_PASSWORD
+                    }
+                    url env.MAVEN_URL
+                }
+            } else {
+                mavenLocal()
             }
         }
     }
-
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
-    }
-}
