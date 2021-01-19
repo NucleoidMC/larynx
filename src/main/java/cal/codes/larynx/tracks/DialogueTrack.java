@@ -25,31 +25,50 @@ public class DialogueTrack {
     this.dialogues = dialogues;
     this.ticksBetween = ticksBetween;
   }
+
+  /**
+   * Play the track to a playerset.
+   *
+   * @param players
+   */
   public void play(PlayerSet players) {
     int currentDelay = 0;
     Timer timer = new Timer();
     for (DialogueRaw entry : this.dialogues) {
-      timer.schedule( new TimerTask() {
-        @Override
-        public void run() { entry.getDialogue().play(players); }
-      }, (long) (currentDelay) / 20 * 1000);
+      timer.schedule(
+          new TimerTask() {
+            @Override
+            public void run() {
+              entry.getDialogue().play(players);
+            }
+          },
+          (long) (currentDelay) / 20 * 1000);
       currentDelay += entry.delay | this.ticksBetween;
     }
   }
+
+  /**
+   * Play the track to a single player.
+   *
+   * @param player
+   */
   public void play(ServerPlayerEntity player) {
     int currentDelay = 0;
     Timer timer = new Timer();
     for (DialogueRaw entry : this.dialogues) {
-      timer.schedule( new TimerTask() {
-        @Override
-        public void run() { entry.getDialogue().play(player); }
-      }, (long) (currentDelay) / 20 * 1000);
-      if(entry.delay == -1) {
+      timer.schedule(
+          new TimerTask() {
+            @Override
+            public void run() {
+              entry.getDialogue().play(player);
+            }
+          },
+          (long) (currentDelay) / 20 * 1000);
+      if (entry.delay == -1) {
         currentDelay += this.ticksBetween;
       } else {
         currentDelay += entry.delay;
       }
-
     }
   }
 }

@@ -38,19 +38,14 @@ public class DialogueRaw {
                         boolean tranAuthh = false;
                         int delayy = -1;
 
-                        if(delay.isPresent()) delayy = delay.get();
-                        if(tranAuth.isPresent()) tranAuthh = tranAuth.get();
-                        if(tranText.isPresent()) tranTextt = tranText.get();
-                        if(sound.isPresent()) soundd = Registry.SOUND_EVENT.get(Identifier.tryParse(sound.get()));
+                        if (delay.isPresent()) delayy = delay.get();
+                        if (tranAuth.isPresent()) tranAuthh = tranAuth.get();
+                        if (tranText.isPresent()) tranTextt = tranText.get();
+                        if (sound.isPresent())
+                          soundd = Registry.SOUND_EVENT.get(Identifier.tryParse(sound.get()));
 
                         return new DialogueRaw(
-                                type,
-                                text,
-                                author,
-                                color,
-                                soundd,
-                                tranTextt,
-                                tranAuthh, delayy);
+                            type, text, author, color, soundd, tranTextt, tranAuthh, delayy);
                       }));
   public String type;
   public String text;

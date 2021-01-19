@@ -19,11 +19,13 @@ public class SoundDialogue extends Dialogue {
     super(text, author, color, translateText, translateAuthor);
     this.sound = sound;
   }
+
   @Override
   public void play(PlayerSet players) {
     players.sendSound(sound, SoundCategory.PLAYERS, 1f, 1f);
     super.play(players);
   }
+
   @Override
   public void play(ServerPlayerEntity player) {
     player.playSound(sound, SoundCategory.PLAYERS, 1f, 1f);

@@ -1,8 +1,6 @@
 package cal.codes.larynx;
 
 import cal.codes.larynx.tracks.DialogueTrack;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mojang.datafixers.util.Pair;
@@ -17,19 +15,12 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Random;
 
 public class Larynx implements DedicatedServerModInitializer {
-
-  private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-  private static final JsonParser JSON_PARSER = new JsonParser();
-
   public final boolean DEV = FabricLoader.getInstance().isDevelopmentEnvironment();
-
   /**
    * Get a file from the resources folder of a jar.
    *
@@ -57,12 +48,6 @@ public class Larynx implements DedicatedServerModInitializer {
       return tmp;
     }
   }
-
-  private static String readFile(String path, Charset encoding) throws IOException {
-    byte[] encoded = Files.readAllBytes(Paths.get(path));
-    return new String(encoded, encoding);
-  }
-
   /**
    * Get a DialogueTrack from your mod.
    *
@@ -79,7 +64,8 @@ public class Larynx implements DedicatedServerModInitializer {
       JsonParser e = new JsonParser();
       try (InputStream input = Files.newInputStream(file.toPath())) {
         JsonElement element = e.parse(new InputStreamReader(input));
-        DataResult<Pair<DialogueTrack, JsonElement>> ee = DialogueTrack.CODEC.decode(JsonOps.INSTANCE, element);
+        DataResult<Pair<DialogueTrack, JsonElement>> ee =
+            DialogueTrack.CODEC.decode(JsonOps.INSTANCE, element);
         ef = ee.result().map(Pair::getFirst);
       }
     } catch (Exception e) {
