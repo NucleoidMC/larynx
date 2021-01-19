@@ -29,23 +29,14 @@ public class Larynx implements DedicatedServerModInitializer {
    * @return A file class you can use.
    * @throws Exception
    */
-  public static File getFileFromResource(String path, Class root) throws Exception {
+  public static InputStream getFileFromResource(String path, Class root) throws Exception {
     URL resource = root.getClassLoader().getResource(path);
     System.out.println(resource);
     if (resource == null) {
       throw new IllegalArgumentException("file not found! " + path);
     } else {
-      File tmp = File.createTempFile(String.valueOf(new Random().nextLong()), "cache-larynx.json");
       InputStream in = root.getClassLoader().getResourceAsStream(path);
-      try (OutputStream outputStream = new FileOutputStream(tmp)) {
-        IOUtils.copy(in, outputStream);
-      } catch (IOException e) {
-        throw e;
-      }
-      if (tmp == null) {
-        throw new Exception("File is null.");
-      }
-      return tmp;
+      return in;
     }
   }
   /**
@@ -58,18 +49,15 @@ public class Larynx implements DedicatedServerModInitializer {
   public static DialogueTrack get(Identifier ID, Class classRef) {
     Optional<DialogueTrack> ef = null;
     try {
-      File file =
-          getFileFromResource(
+      InputStream file = getFileFromResource(
               "assets/" + ID.getNamespace() + "/dialogues/" + ID.getPath() + ".json", classRef);
       JsonParser e = new JsonParser();
-      try (InputStream input = Files.newInputStream(file.toPath())) {
-        JsonElement element = e.parse(new InputStreamReader(input));
+        JsonElement element = e.parse(new InputStreamReader(file));
         DataResult<Pair<DialogueTrack, JsonElement>> ee =
             DialogueTrack.CODEC.decode(JsonOps.INSTANCE, element);
         ef = ee.result().map(Pair::getFirst);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
+      } catch (Exception exception) {
+      exception.printStackTrace();
     }
     return ef.get();
   }
