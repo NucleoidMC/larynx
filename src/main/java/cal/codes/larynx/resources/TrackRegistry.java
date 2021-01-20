@@ -38,7 +38,7 @@ public class TrackRegistry {
 
         @Override
         public void apply(ResourceManager manager) {
-            registry.clear();
+            INSTANCE.clear();
             Collection<Identifier> resources = manager.findResources("dialog_tracks", path -> path.endsWith(".json"));
 
             for (Identifier path : resources) {
@@ -48,7 +48,7 @@ public class TrackRegistry {
                         JsonElement json = new JsonParser().parse(reader);
                         DataResult<DialogueTrack> data = DialogueTrack.CODEC.decode( JsonOps.INSTANCE, json).map(Pair::getFirst);
                         data.result().ifPresent( dialogueTrack ->  {
-                            registry.put(dialogueTrack.id, dialogueTrack);
+                            INSTANCE.put(dialogueTrack.id, dialogueTrack);
                         });
                         data.error().ifPresent(error -> {
                             Plasmid.LOGGER.error("[Larynx] Failed to decode dialog track at {}: {}", path, error.toString());
