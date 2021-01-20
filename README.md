@@ -6,18 +6,20 @@ Example usage:
 
 `MyModFile.java`
 ```java
-Larynx.get(new Identifier("myMod", "mytrack"), myMod.class).play(player);
+TrackRegistry.INSTANCE
+        .get(new Identifier("larynx", "mytrack"))
+        .play(context.getSource().getPlayer());
 ```
 
-`assets/larynx/dialogues/mytrack.json`
+`data/larynx/dialogues/mytrack.json`
 ```json
 {
-  "dialogues": [
+  "lines": [
     {
       "type": "usual",
       "text": "Hello! Fine day today isn't it?",
       "author": "NPC 1",
-      "delay": "30",
+      "delay": 30,
       "color": "blue"
     },
     {
@@ -27,6 +29,7 @@ Larynx.get(new Identifier("myMod", "mytrack"), myMod.class).play(player);
       "color": "red"
     }
   ],
-  "ticksBetween": 60
+  "defaultDelay": 60,
+  "id": "larynx:mytrack"
 }
 ```
