@@ -1,5 +1,5 @@
 {
-  "dialogues": [
+  "lines": [
     {
       "type": "usual",
       "text": "Hello! Fine day today isn't it?",
@@ -14,5 +14,6 @@
       "color": "red"
     }
   ],
-  "ticksBetween": 60
+  "defaultDelay": 60,
+  "id": "larynx:mytrack"
 }

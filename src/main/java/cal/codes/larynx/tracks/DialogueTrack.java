@@ -3,6 +3,7 @@ package cal.codes.larynx.tracks;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import xyz.nucleoid.plasmid.game.player.PlayerSet;
 
 import java.util.List;
@@ -15,15 +16,19 @@ public class DialogueTrack {
           dialogueTrackInstance ->
               dialogueTrackInstance
                   .group(
-                      DialogueLine.CODEC.listOf().fieldOf("lines").forGetter( e -> e.dialogues),
-                      Codec.INT.fieldOf("ticksBetween").forGetter(e -> e.ticksBetween))
+                      DialogueLine.CODEC.listOf().fieldOf("lines").forGetter( (DialogueTrack e) -> e.dialogues),
+                      Codec.INT.fieldOf("defaultDelay").forGetter((DialogueTrack e) -> e.ticksBetween),
+                      Codec.STRING.fieldOf("id").forGetter( (DialogueTrack e) -> e.stringID ))
                   .apply(dialogueTrackInstance, DialogueTrack::new));
   public List<DialogueLine> dialogues;
+  public Identifier id;
+  private String stringID;
   public int ticksBetween;
 
-  public DialogueTrack(List<DialogueLine> dialogues, int ticksBetween) {
+  public DialogueTrack(List<DialogueLine> dialogues, int ticksBetween, String id) {
     this.dialogues = dialogues;
     this.ticksBetween = ticksBetween;
+    this.id = new Identifier( id );
   }
 
   /**
