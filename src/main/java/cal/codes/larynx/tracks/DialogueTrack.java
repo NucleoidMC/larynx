@@ -5,10 +5,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import xyz.nucleoid.plasmid.game.player.PlayerSet;
+import xyz.nucleoid.plasmid.util.Scheduler;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class DialogueTrack {
   public static Codec<DialogueTrack> CODEC =
@@ -16,19 +15,24 @@ public class DialogueTrack {
           dialogueTrackInstance ->
               dialogueTrackInstance
                   .group(
-                      DialogueLine.CODEC.listOf().fieldOf("lines").forGetter( (DialogueTrack e) -> e.dialogues),
-                      Codec.INT.fieldOf("defaultDelay").forGetter((DialogueTrack e) -> e.ticksBetween),
-                      Codec.STRING.fieldOf("id").forGetter( (DialogueTrack e) -> e.stringID ))
+                      DialogueLine.CODEC
+                          .listOf()
+                          .fieldOf("lines")
+                          .forGetter((DialogueTrack e) -> e.dialogues),
+                      Codec.INT
+                          .fieldOf("defaultDelay")
+                          .forGetter((DialogueTrack e) -> e.ticksBetween),
+                      Codec.STRING.fieldOf("id").forGetter((DialogueTrack e) -> e.stringID))
                   .apply(dialogueTrackInstance, DialogueTrack::new));
   public List<DialogueLine> dialogues;
   public Identifier id;
-  private String stringID;
   public int ticksBetween;
+  private String stringID;
 
   public DialogueTrack(List<DialogueLine> dialogues, int ticksBetween, String id) {
     this.dialogues = dialogues;
     this.ticksBetween = ticksBetween;
-    this.id = new Identifier( id );
+    this.id = new Identifier(id);
   }
 
   /**
@@ -38,16 +42,12 @@ public class DialogueTrack {
    */
   public void play(PlayerSet players) {
     int currentDelay = 0;
-    Timer timer = new Timer();
     for (DialogueLine entry : this.dialogues) {
-      timer.schedule(
-          new TimerTask() {
-            @Override
-            public void run() {
-              entry.getDialogue().play(players);
-            }
+      Scheduler.INSTANCE.submit(
+          minecraftServer -> {
+            entry.getDialogue().play(players);
           },
-          (long) (currentDelay) / 20 * 1000);
+          currentDelay);
       if (entry.delay == -1) {
         currentDelay += this.ticksBetween;
       } else {
@@ -63,16 +63,12 @@ public class DialogueTrack {
    */
   public void play(ServerPlayerEntity player) {
     int currentDelay = 0;
-    Timer timer = new Timer();
     for (DialogueLine entry : this.dialogues) {
-      timer.schedule(
-          new TimerTask() {
-            @Override
-            public void run() {
-              entry.getDialogue().play(player);
-            }
+      Scheduler.INSTANCE.submit(
+          minecraftServer -> {
+            entry.getDialogue().play(player);
           },
-          (long) (currentDelay) / 20 * 1000);
+          currentDelay);
       if (entry.delay == -1) {
         currentDelay += this.ticksBetween;
       } else {

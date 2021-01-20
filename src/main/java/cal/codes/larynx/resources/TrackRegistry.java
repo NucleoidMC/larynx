@@ -22,45 +22,52 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class TrackRegistry {
-    public static final HashMap<Identifier, DialogueTrack> INSTANCE = new HashMap<>();
+  public static final HashMap<Identifier, DialogueTrack> INSTANCE = new HashMap<>();
 
-    public static void init() {
-        ResourceManagerHelper serverData = ResourceManagerHelper.get( ResourceType.SERVER_DATA);
-        serverData.registerReloadListener( new TrackRegistryReloader()  );
+  public static void init() {
+    ResourceManagerHelper serverData = ResourceManagerHelper.get(ResourceType.SERVER_DATA);
+    serverData.registerReloadListener(new TrackRegistryReloader());
+  }
+
+  protected static class TrackRegistryReloader implements SimpleSynchronousResourceReloadListener {
+
+    @Override
+    public Identifier getFabricId() {
+      return new Identifier("larynx", "dialog_tracks");
     }
 
-    protected static class TrackRegistryReloader implements SimpleSynchronousResourceReloadListener {
+    @Override
+    public void apply(ResourceManager manager) {
+      INSTANCE.clear();
+      Collection<Identifier> resources =
+          manager.findResources("dialog_tracks", path -> path.endsWith(".json"));
 
-        @Override
-        public Identifier getFabricId() {
-            return new Identifier("larynx", "dialog_tracks");
+      for (Identifier path : resources) {
+        try {
+          Resource resource = manager.getResource(path);
+          try (Reader reader =
+              new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            JsonElement json = new JsonParser().parse(reader);
+            DataResult<DialogueTrack> data =
+                DialogueTrack.CODEC.decode(JsonOps.INSTANCE, json).map(Pair::getFirst);
+            data.result()
+                .ifPresent(
+                    dialogueTrack -> {
+                      INSTANCE.put(dialogueTrack.id, dialogueTrack);
+                    });
+            data.error()
+                .ifPresent(
+                    error -> {
+                      Plasmid.LOGGER.error(
+                          "[Larynx] Failed to decode dialog track at {}: {}",
+                          path,
+                          error.toString());
+                    });
+          }
+        } catch (IOException e) {
+          Plasmid.LOGGER.error("[Larynx] Failed to read dialog track at {}", path, e);
         }
-
-        @Override
-        public void apply(ResourceManager manager) {
-            INSTANCE.clear();
-            Collection<Identifier> resources = manager.findResources("dialog_tracks", path -> path.endsWith(".json"));
-
-            for (Identifier path : resources) {
-                try {
-                    Resource resource = manager.getResource(path);
-                    try (Reader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                        JsonElement json = new JsonParser().parse(reader);
-                        DataResult<DialogueTrack> data = DialogueTrack.CODEC.decode( JsonOps.INSTANCE, json).map(Pair::getFirst);
-                        data.result().ifPresent( dialogueTrack ->  {
-                            INSTANCE.put(dialogueTrack.id, dialogueTrack);
-                        });
-                        data.error().ifPresent(error -> {
-                            Plasmid.LOGGER.error("[Larynx] Failed to decode dialog track at {}: {}", path, error.toString());
-                        });
-                    }
-                } catch (IOException e) {
-                    Plasmid.LOGGER.error("[Larynx] Failed to read dialog track at {}", path, e);
-                }
-            }
-
-        }
+      }
     }
-
+  }
 }
-

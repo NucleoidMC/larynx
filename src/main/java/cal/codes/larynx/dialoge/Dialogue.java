@@ -5,7 +5,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.plasmid.game.player.PlayerSet;
 
 import java.util.Objects;
@@ -18,11 +17,7 @@ public abstract class Dialogue {
   public boolean translateAuthor = false;
 
   public Dialogue(
-      String text,
-      String author,
-      String color,
-      boolean translateText,
-      boolean translateAuthor) {
+      String text, String author, String color, boolean translateText, boolean translateAuthor) {
     this.text = text;
     this.author = author;
     this.color = color;
@@ -30,6 +25,7 @@ public abstract class Dialogue {
     if (translateText) this.translateText = translateText;
     if (translateAuthor) this.translateText = translateText;
   }
+
   @Override
   public int hashCode() {
     return Objects.hash(text, author, color);
